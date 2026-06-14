@@ -1,11 +1,12 @@
 body{
     margin: 0;
     background-color: #cdcdcd;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 .login-body{
     margin: 0;
-    background-color: #003DA5;
+    background-image: linear-gradient(45deg, #155ad9, #003DA5, #012158);
 
     display: flex;
     flex-direction: column;
@@ -16,7 +17,7 @@ body{
 
 .login-container{
     color: #ffffff;
-    width: 50vw;
+    width: 30vw;
     height: 100vh;
 
     
@@ -35,11 +36,25 @@ body{
     margin: 0.5em 0 2em 0;
 }
 
+.subtext{
+    color: #8c8c8c;
+}
+
+.subtext span{
+    color: #003DA5;
+    font-weight: bold;
+    cursor: pointer;
+}
+
 .login-card{
     background-color: #ffffff;
+    color: #242424;
 
     width: 100%;
     height: 80%;
+    padding: 0em 1em;
+    margin-top: auto;
+    margin-bottom: auto;
 
     border-radius: 15px;
 
@@ -50,8 +65,66 @@ body{
 }
 
 .login-form{
+    color: #242424;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    gap: 1em;
+    width: 90%;
+}
+
+.login-form fieldset{
+    
+    border: none;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    padding: 0.5em 0;
+}
+
+.login-form label{
+    margin-bottom: 0.5em;
+    font-weight: bold;
+}
+
+.login-form input{
+    width: 95%;
+    height: 2.5em;
+    border-radius: 7px;
+    border: 1px solid #505050;
+    padding-left: 1em;
+    
+}
+
+.submit-button{
+    width: 100%;
+    height: 2.5em;
+    border-radius: 7px;
+    border: none;
+
+    background-color: #003DA5;
+    color: #ffffff;
+    font-size: 1em;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.submit-button:hover{
+    background-color: #95b1e2;
+}
+
+.warning-box{
+    border: 1px solid #003DA5;
+    border-radius: 7px;
+    margin: 2em 0 0 0;
+
+    background-color: #d9f2ff;
+
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+}
+
+.warning-box p{
+    font-weight: bold;
+    margin: 1em 0 0 1em;
 }
