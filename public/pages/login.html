@@ -7,17 +7,95 @@
 
     <link rel="stylesheet" href="../styles/style.css">
 </head>
-<body class="login-body">
+<body id="login-cadastro" class="login-body">
     
     <main class="login-container">
 
         
         <div class="login-card">
             
-            <h2 class="title">Bem-vindo de volta</h2>
-            <p class="subtitle">Acesse sua conta para continuar</p>
-            
-            <form class="login-form" action="" method="post">
+            <form id="cadastro-form" class="login-form" action="" method="post">
+
+                <section>
+                    <h2 class="title">Criar Conta</h2>
+                    <p class="subtitle">Cadastre-se para acessar a políticas públicas</p>
+                </section>
+
+                
+                <fieldset>
+         
+                    <label for="cadastro-nome">Nome</label>
+                    <input 
+                        type="text" 
+                        name="cadastro-nome" 
+                        id="cadastro-nome"
+                        class="login-input"
+                        placeholder="seu@email"
+                    >
+                </fieldset>
+
+                <fieldset>
+         
+                    <label for="cadastro-email">Email</label>
+                    <input 
+                        type="email" 
+                        name="cadastro-email" 
+                        id="cadastro-email"
+                        class="login-input"
+                        placeholder="seu@email"
+                    >
+                </fieldset>
+
+                <fieldset>
+
+                    <label for="cadastro-pass">Senha</label>
+                    <input 
+                        type="password" 
+                        name="cadastro-pass" 
+                        id="cadastro-pass"
+                        class="login-input"
+                        placeholder="suasenha"
+                    >
+                </fieldset>
+
+                <fieldset id="perfil-box">
+                    
+
+                    <label for="cadastro-perfil-admin">
+                    <input 
+                        type="radio" 
+                        name="cadastro-perfil" 
+                        id="cadastro-perfil-admin"
+                        class="login-input"
+                        value="admin"
+                    >Admin
+                    </label>
+                    
+                    <label for="cadastro-perfil-cidadao">
+                    <input 
+                        type="radio" 
+                        name="cadastro-perfil" 
+                        id="cadastro-perfil-cidadao"
+                        class="login-input"
+                        value="cidadao"
+                    >Cidadão
+                    </label>
+                </fieldset>
+                
+
+                <button id="btnCadastrar" class="submit-button" type="submit">Cadastrar</button>
+
+                <section>
+                    <p class="subtext">Ja tem uma conta? <span id="btnIrParaLogin">Fazer LogIn</span> </p>
+                </section>
+            </form>
+
+            <form id="login-form" class="login-form" action="" method="post">
+
+                <section>
+                    <h2 class="title">Bem-vindo de volta</h2>
+                    <p class="subtitle">Acesse sua conta para continuar</p>
+                </section>
 
                 
                 <fieldset>
@@ -44,24 +122,28 @@
                     >
                 </fieldset>
 
+                <button id="btnEntar" class="submit-button" type="submit">Entrar</button>
 
-                <button class="submit-button" type="submit">Entrar</button>
+                <section>
+
+                    <section class="warning-box">
+                        <p>Para testes, use qualquer email e senha válidos:</p>
+                        
+                        <ul>
+                            <li>Email: deve conter @email.com ou semelhante</li>
+                            <li>Senha: mínimo 6 caracteres</li>
+                        </ul>
+                    </section>
+                    
+                    <p class="subtext">Não tem uma conta? <span id="btnIrParaCadastro">Cadastre-se aqui</span> </p>
+                </section>
             </form>
             
-            <section class="warning-box">
-                <p>Para testes, use qualquer email e senha válidos:</p>
-                
-                <ul>
-                    <li>Email: deve conter @email.com ou semelhante</li>
-                    <li>Senha: mínimo 6 caracteres</li>
-                </ul>
-            </section>
-            
-            <p class="subtext">Não tem uma conta? <span>Cadastre-se aqui</span> </p>
 
         </div>
 
     </main>
 
+    <script src="../script.js"></script>
 </body>
 </html>
