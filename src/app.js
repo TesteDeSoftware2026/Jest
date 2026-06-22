@@ -8,6 +8,9 @@ app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 app.use(express.static(path.join(__dirname, "../public")))
 
+//========================== CONEXAO DB ============================
+const db = require("../src/database/database");
+
 
 //============================= ROTAS ===========================
 app.get('/', (req, res) => {
