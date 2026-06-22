@@ -17,6 +17,10 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, "../public/pages/login.html"))
 })
 
+app.get('/home', (req, res) => {
+    res.sendFile(path.join(__dirname, "../public/pages/home.html"))
+})
+
 const apiRouter = require("../src/routes/api")
 app.use("/api", apiRouter)
 
