@@ -36,8 +36,16 @@ app.get('/politicas', (req, res) => {
 
 //============================= ROTAS API ===========================
 
-const apiRouter = require("../src/routes/api")
-app.use("/api", apiRouter)
+const authRouter = require("../src/routes/auth")
+app.use("/auth", authRouter)
+
+const cidadaoRouter = require("../src/routes/cidadao")
+app.use("/cidadao", cidadaoRouter)
+
+const adminRouter = require("../src/routes/admin")
+app.use("/admin", adminRouter)
+
+
 
 //============================= EXPORT ===========================
 module.exports = app
