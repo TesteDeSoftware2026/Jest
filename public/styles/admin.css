@@ -1,0 +1,200 @@
+.admin-container{
+
+    width: 85%;
+    margin: auto;
+
+    padding: 2rem 0;
+}
+
+/* TÍTULO */
+
+.page-header{
+
+    margin-bottom: 2rem;
+}
+
+.page-header h1{
+
+    margin-bottom: .5rem;
+    color: #1e293b;
+}
+
+.page-header p{
+
+    color: #64748b;
+}
+
+/* TABS */
+
+.tabs-container{
+
+    display: flex;
+    gap: 2rem;
+
+    border-bottom: 1px solid #d9d9d9;
+
+    margin-bottom: 2rem;
+}
+
+.tab-button{
+
+    background: none;
+    border: none;
+
+    cursor: pointer;
+
+    font-size: 1rem;
+
+    padding: 1rem 0;
+}
+
+.active-tab{
+
+    color: #003DA5;
+
+    border-bottom: 3px solid #003DA5;
+
+    font-weight: bold;
+}
+
+/* BARRA SUPERIOR */
+
+.toolbar{
+
+    display: flex;
+
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 2rem;
+}
+
+.toolbar .search-input{
+
+    width: 450px;
+
+    height: 45px;
+
+    border-radius: 10px;
+
+    border: 1px solid #d1d5db;
+
+    padding-left: 1rem;
+}
+
+.new-policy-button{
+
+    background-color: #003DA5;
+
+    color: white;
+
+    border: none;
+
+    border-radius: 10px;
+
+    padding: .9rem 1.5rem;
+
+    cursor: pointer;
+
+    font-size: 1rem;
+}
+
+.new-policy-button:hover{
+
+    opacity: .9;
+}
+
+/* TABELA */
+
+.table-container{
+
+    background-color: white;
+
+    border-radius: 15px;
+
+    overflow: hidden;
+
+    box-shadow: 0 0 10px rgba(0,0,0,.08);
+}
+
+table{
+
+    width: 100%;
+
+    border-collapse: collapse;
+}
+
+thead{
+
+    background-color: #f8fafc;
+}
+
+th{
+
+    text-align: left;
+
+    padding: 1.5rem;
+
+    color: #1e293b;
+}
+
+td{
+
+    padding: 1rem 1.5rem;
+
+    border-top: 1px solid #e5e7eb;
+
+    vertical-align: top;
+}
+
+td p{
+
+    margin-top: .5rem;
+    color: #64748b;
+}
+
+/* TAG */
+
+.category-tag{
+
+    background-color: #dbeafe;
+
+    color: #003DA5;
+
+    padding: .4rem .8rem;
+
+    border-radius: 999px;
+
+    font-size: .9rem;
+}
+
+/* AÇÕES */
+
+.actions-cell{
+
+    white-space: nowrap;
+}
+
+.edit-button,
+.delete-button{
+
+    background: none;
+
+    border: none;
+
+    cursor: pointer;
+
+    font-size: 1.2rem;
+
+    margin-right: .5rem;
+}
+
+.edit-button{
+
+    color: #003DA5;
+}
+
+.delete-button{
+
+    color: red;
+}

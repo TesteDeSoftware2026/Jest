@@ -12,7 +12,7 @@ app.use(express.static(path.join(__dirname, "../public")))
 const db = require("../src/database/database");
 
 
-//============================= ROTAS ===========================
+//============================= ROTAS HTML ===========================
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, "../public/pages/login.html"))
 })
@@ -20,6 +20,13 @@ app.get('/', (req, res) => {
 app.get('/home', (req, res) => {
     res.sendFile(path.join(__dirname, "../public/pages/home.html"))
 })
+
+app.get('/admin', (req, res) => {
+    res.sendFile(path.join(__dirname, "../public/pages/admin.html"))
+})
+
+
+//============================= ROTAS API ===========================
 
 const apiRouter = require("../src/routes/api")
 app.use("/api", apiRouter)
