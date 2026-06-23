@@ -25,6 +25,10 @@ app.get('/admin', (req, res) => {
     res.sendFile(path.join(__dirname, "../public/pages/admin.html"))
 })
 
+app.get('/cidadao', (req, res) => {
+    res.sendFile(path.join(__dirname, "../public/pages/cidadao.html"))
+})
+
 
 //============================= ROTAS API ===========================
 
