@@ -29,6 +29,10 @@ app.get('/cidadao', (req, res) => {
     res.sendFile(path.join(__dirname, "../public/pages/cidadao.html"))
 })
 
+app.get('/politicas', (req, res) => {
+    res.sendFile(path.join(__dirname, "../public/pages/politicas.html"))
+})
+
 
 //============================= ROTAS API ===========================
 

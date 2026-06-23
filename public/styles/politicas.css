@@ -1,0 +1,138 @@
+.details-container{
+
+    width: 85%;
+    margin: auto;
+
+    padding: 2rem 0;
+}
+
+.back-button{
+
+    text-decoration: none;
+
+    color: #003DA5;
+
+    font-weight: bold;
+
+    display: inline-block;
+
+    margin-bottom: 1rem;
+}
+
+.policy-title{
+
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+
+    color: #1e293b;
+
+    font-size: 3rem;
+}
+
+.details-grid{
+
+    display: grid;
+
+    grid-template-columns: 2fr 1fr;
+
+    gap: 2rem;
+}
+
+/* CARDS */
+
+.content-card{
+
+    background-color: white;
+
+    border-radius: 15px;
+
+    padding: 2rem;
+
+    margin-bottom: 2rem;
+
+    box-shadow: 0 0 10px rgba(0,0,0,.08);
+}
+
+.content-card h2{
+
+    margin-top: 0;
+
+    color: #1e293b;
+}
+
+.content-card p{
+
+    line-height: 1.8;
+    color: #475569;
+}
+
+/* CRITÉRIOS */
+
+.criteria-list{
+
+    padding-left: 1.5rem;
+}
+
+.criteria-list li{
+
+    margin-bottom: 1rem;
+}
+
+/* DOCUMENTOS */
+
+.documents-list{
+
+    padding-left: 1.5rem;
+}
+
+.documents-list li{
+
+    margin-bottom: 1rem;
+}
+
+/* SIDEBAR */
+
+.sidebar{
+
+    display: flex;
+    flex-direction: column;
+}
+
+.info-item{
+
+    margin-bottom: 1.5rem;
+}
+
+.info-item strong{
+
+    color: #003DA5;
+}
+
+.info-item p{
+
+    margin-top: .5rem;
+}
+
+.interest-button{
+
+    border: none;
+
+    border-radius: 12px;
+
+    padding: 1.2rem;
+
+    font-size: 1.1rem;
+    font-weight: bold;
+
+    cursor: pointer;
+
+    background-color: #003DA5;
+    color: white;
+
+    margin-bottom: 1rem;
+}
+
+.interest-button:hover{
+
+    background-color: #004bc9;
+}
