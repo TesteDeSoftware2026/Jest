@@ -37,11 +37,29 @@ npm install
 npm run dev
 ```
 
-## Executar testes
-
+## Roda todos os testes
 ```bash
 # cmd
 npm test
+```
+
+## Só unitários (rápido, sem banco)
+```bash
+# cmd
+npm run test:unit
+```
+
+
+## Só integração (precisa do banco rodando)
+```bash
+# cmd
+npm run test:integration
+```
+
+## Roda um arquivo específico
+```bash
+# cmd
+npx jest tests/unit/authService.test.js
 ```
 
 

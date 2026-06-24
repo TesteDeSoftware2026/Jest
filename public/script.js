@@ -22,12 +22,53 @@ btnIrParaLogin.addEventListener("click", () => {
 })
 
 
-btnCadastrar.addEventListener("click", () => {
+cadastroForm.addEventListener("submit", async (event) => {
     //fazer requisição de cadastrar usuario
+    event.preventDefault()
+
+    const nome = document.getElementById("cadastro-nome").value
+    const email = document.getElementById("cadastro-email").value
+    const senha = document.getElementById("cadastro-senha").value
+    const perfil = document.querySelector('input[name="cadastro-perfil"]:checked').value;
+
+    console.log(nome, email, senha, perfil)
+
+    const resposta = await fetch("/auth/cadastro", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({nome, email, senha, perfil})
+    })
+
+    const dados = await resposta.json()
+
+    if(resposta.ok){
+        localStorage.setItem("usuarioLogado", JSON.stringify(dados))
+        
+        window.location.href = "/home"
+    }
+
 })
 
-btnEntar.addEventListener("click", () => {
+loginForm.addEventListener("submit", async () => {
     //fazer requisição de login
+
+    const email = document.getElementById("login-email").value
+    const senha = document.getElementById("login-senha").value
+
+    const resposta = await fetch("/auth/login", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({email, senha})
+    })
+
+    const dados = await resposta.json()
+    const perfil = dados.perfil
+
+    if(resposta.ok){
+        localStorage.setItem("usuarioLogado", JSON.stringify(dados))
+        
+        window.location.href = "/home"
+    }
 })
 
 
