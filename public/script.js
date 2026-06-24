@@ -100,17 +100,92 @@ const nomeText = usuarioLogado ? usuarioLogado.nome : "User"
 btnArea.textContent = areaText
 btnNomePerfil.textContent = nomeText
 
+btnArea.addEventListener("click", () => {
+    if(usuarioLogado.perfil == "admin"){
+        window.location.href = "/admin"
+    }else{
+        window.location.href = "/cidadao"
+    }
+})
+
 }
 
 
-// //================================ CIDADAO.HTML ====================================
-// if(document.body.id == "cidadao"){
+//================================ CIDADAO.HTML ====================================
+if(document.body.id == "cidadao"){
+    
+const btnLogout = document.getElementById("btnLogout")
 
-// }
+btnLogout.addEventListener("click", () => {
+    localStorage.removeItem("usuarioLogado")
+    window.location.href = "/"
+})
+
+const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"))
+
+const navbar = document.querySelector("nav.header-nav")
+const btnArea = document.getElementById("btn-area")
+const btnNomePerfil = document.getElementById("btn-nome-perfil")
+
+const areaText = usuarioLogado.perfil == "admin" ? "Painel Admin" : "Minha Area"
+const nomeText = usuarioLogado ? usuarioLogado.nome : "User"
+
+btnArea.textContent = areaText
+btnNomePerfil.textContent = nomeText
+
+btnArea.addEventListener("click", () => {
+    if(usuarioLogado.perfil == "admin"){
+        window.location.href = "/admin"
+    }else{
+        window.location.href = "/cidadao"
+    }
+})
+
+const btnHome = document.getElementById("btn-home")
+
+btnHome.addEventListener("click", () => {
+    window.location.href = "/home"
+})
+
+}
 
 
-// //================================ ADMIN.HTML ====================================
-// if(document.body.id == "admin"){
+//================================ ADMIN.HTML ====================================
+if(document.body.id == "admin"){
 
-// }
+const btnLogout = document.getElementById("btnLogout")
+
+btnLogout.addEventListener("click", () => {
+    localStorage.removeItem("usuarioLogado")
+    window.location.href = "/"
+})
+
+const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"))
+
+const navbar = document.querySelector("nav.header-nav")
+const btnArea = document.getElementById("btn-area")
+const btnNomePerfil = document.getElementById("btn-nome-perfil")
+
+const areaText = usuarioLogado.perfil == "admin" ? "Painel Admin" : "Minha Area"
+const nomeText = usuarioLogado ? usuarioLogado.nome : "User"
+
+btnArea.textContent = areaText
+btnNomePerfil.textContent = nomeText
+
+btnArea.addEventListener("click", () => {
+    if(usuarioLogado.perfil == "admin"){
+        window.location.href = "/admin"
+    }else{
+        window.location.href = "/cidadao"
+    }
+})
+
+const btnHome = document.getElementById("btn-home")
+
+btnHome.addEventListener("click", () => {
+    window.location.href = "/home"
+})
+
+
+}
 
