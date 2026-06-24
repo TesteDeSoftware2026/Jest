@@ -3,17 +3,22 @@ const db = require("../database/database");
 const cadastro = async (nome, email, senha, perfil) => {
     
     const [usuarioExiste] = await db.query(`
-        select id from usuarios
+        select id from usuario
         where id = ?`, [email])
 
     if(usuarioExiste.length > 0) throw { status: 409, message: 'E-mail já cadastrado' }
 
     /* futuramente
     const hash = await bcrypt.hash(senha, 10)
+
+     const [resultado] = await db.query(
+        'INSERT INTO usuarios (nome, email, senha) VALUES (?, ?, ?)',
+        [nome, email, hash]
+    )
      */
 
     const [usuarioCriado] = await db.query(`
-        insert into usuarios (nome, email, senha, perfil)
+        insert into usuario (nome, email, senha, perfil)
         values (?, ?, ?, ?)`, [nome, email, senha, perfil])
 
     return {
@@ -27,7 +32,7 @@ const cadastro = async (nome, email, senha, perfil) => {
 const login = async (email, senha) => {
 
     const [usuarioExiste] = await db.query(`
-        select * from usuarios
+        select * from usuario
         where email = ? and senha = ?`, [email, senha])
 
     if(usuarioExiste.length < 1) throw {staus: 401, message: "Conta não encontrada"}

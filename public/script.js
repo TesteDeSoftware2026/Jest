@@ -29,7 +29,9 @@ cadastroForm.addEventListener("submit", async (event) => {
     const nome = document.getElementById("cadastro-nome").value
     const email = document.getElementById("cadastro-email").value
     const senha = document.getElementById("cadastro-senha").value
-    const perfil = document.querySelector('input[name="perfil"]:checked').value;
+    const perfil = document.querySelector('input[name="cadastro-perfil"]:checked').value;
+
+    console.log(nome, email, senha, perfil)
 
     const resposta = await fetch("/auth/cadastro", {
         method: "POST",
@@ -38,6 +40,12 @@ cadastroForm.addEventListener("submit", async (event) => {
     })
 
     const dados = await resposta.json()
+
+    if(resposta.ok){
+        localStorage.setItem("usuarioLogado", JSON.stringify(dados))
+        
+        window.location.href = "/home"
+    }
 
 })
 
