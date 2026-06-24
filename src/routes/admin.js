@@ -8,6 +8,7 @@ const adminController = require("../controllers/adminController");
 //routas
 router.post("/criar",adminController.criar)
 router.get("/listar",adminController.listar);
+router.put("/atualizar/:id",adminController.atualizar);
 
 //exporta o "router"
 module.exports = router
