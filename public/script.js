@@ -113,11 +113,21 @@ btnArea.addEventListener("click", () => {
 
 const politicasSection = document.getElementById("politicas-section")
 
+console.log("antes da função")
+
+carregarPoliticas()
+
 async function carregarPoliticas() {
     try{
-        const resposta = await fetch(`/${usuarioLogado.perfil}/carregarPoliticas`, {
+
+        console.log("antes do fetch ")
+        console.log(usuarioLogado.perfil)
+
+        const resposta = await fetch(`/${usuarioLogado.perfil}/listar`, {
             method: "GET"
         })
+
+        console.log("depois do fetch ")
 
         const dados = await resposta.json()
 
@@ -306,15 +316,21 @@ btnHome.addEventListener("click", () => {
     window.location.href = "/home"
 })
 
+const bodyTabela = document.getElementById("bodyTabela")
+
+carregarPoliticas()
 
 async function carregarPoliticas() {
     try{
 
-        const resposta = await fetch(`/admin/carregarPoliticas`, {
+
+        const resposta = await fetch(`/admin/listar`, {
             method: "GET"
         })
 
-        const dados = resposta.json()
+        const dados = await resposta.json()
+
+        bodyTabela.innerHTML = ""
 
         dados.forEach(politica => {
 
@@ -365,6 +381,8 @@ async function carregarPoliticas() {
 
                 </tr>
             `
+
+            bodyTabela.innerHTML += linhaTabela
         })
 
     }catch(error){

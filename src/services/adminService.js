@@ -22,6 +22,7 @@ const listarPolitica = async()=>{
     if(politicas.length === 0){ 
         throw {status: 404, message: "Nenhuma politica encontrada"};
     }
+
     return politicas;
      
 }
