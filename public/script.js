@@ -1,3 +1,4 @@
+//========================== LOGIN.HTML ===============================
 if(document.body.id == "login-cadastro"){
 
 const btnIrParaCadastro = document.getElementById("btnIrParaCadastro")
@@ -79,6 +80,8 @@ loginForm.addEventListener("submit", async (event) => {
 
 }
 
+//================================== HOME.HTML ==============================
+
 if(document.body.id == "home"){
 
 const btnLogout = document.getElementById("btnLogout")
@@ -107,6 +110,68 @@ btnArea.addEventListener("click", () => {
         window.location.href = "/cidadao"
     }
 })
+
+const politicasSection = document.getElementById("politicas-section")
+
+console.log("antes da função")
+
+carregarPoliticas()
+
+async function carregarPoliticas() {
+    try{
+
+        console.log("antes do fetch ")
+        console.log(usuarioLogado.perfil)
+
+        const resposta = await fetch(`/${usuarioLogado.perfil}/listar`, {
+            method: "GET"
+        })
+
+        console.log("depois do fetch ")
+
+        const dados = await resposta.json()
+
+        politicasSection.innerHTML = ""
+
+        dados.forEach(politica => {
+            const article = `
+                <article class="policy-card">
+
+                    <span class="tag">
+                        Saúde
+                    </span>
+
+                    <h3>
+                        ${politica.titulo}
+                    </h3>
+
+                    <p>
+                        ${politica.descricao}
+                    </p>
+
+                    <ul>
+                        <li>${politica.publico_alvo}</li>
+                        <li>${politica.local_atuacao}</li>
+                    </ul>
+
+                    <button 
+                    class="details-button"
+                    onclick=detalhePolitica(${politica.id})
+                    >
+                        Ver Detalhes →
+                    </button>
+
+                </article>
+            `
+
+            politicasSection.innerHTML += article
+        });
+
+    }catch(error){
+        console.error("Erro ao carregar politicas", error)
+    }
+}
+
 
 }
 
@@ -147,6 +212,71 @@ btnHome.addEventListener("click", () => {
     window.location.href = "/home"
 })
 
+async function carregarPoliticas() {
+    try{
+
+        const resposta = await fetch(`/cidadao/carregarPoliticas`, {
+            method: "GET"
+        })
+
+        const dados = resposta.json()
+
+        dados.forEach(politica => {
+
+            const linhaTabela = `
+                <tr>
+
+                    <td>
+
+                        <strong>
+                            ${politica.titulo}
+                        </strong>
+
+                        <p>
+                            ${politica.descricao}
+                        </p>
+
+                    </td>
+
+                    <td>
+                        <span class="category-tag">
+                            Saúde
+                        </span>
+                    </td>
+
+                    <td>${politica.local_atuacao}</td>
+
+                    <td>
+                        ${politica.publico_alvo}
+                    </td>
+
+                    <td class="actions-cell">
+
+                        <button
+                        class="edit-button"
+                        onclick=editarPolitica(${politica.id})
+                        >
+                            ✏
+                        </button>
+
+                        <button 
+                        class="delete-button"
+                        onclick=deletarPolitica(${politica.id})
+                        >
+                            🗑
+                        </button>
+
+                    </td>
+
+                </tr>
+            `
+        })
+
+    }catch(error){
+        console.error("Erro ao carregar politicas", error)
+    }
+}
+
 }
 
 
@@ -186,6 +316,79 @@ btnHome.addEventListener("click", () => {
     window.location.href = "/home"
 })
 
+const bodyTabela = document.getElementById("bodyTabela")
+
+carregarPoliticas()
+
+async function carregarPoliticas() {
+    try{
+
+
+        const resposta = await fetch(`/admin/listar`, {
+            method: "GET"
+        })
+
+        const dados = await resposta.json()
+
+        bodyTabela.innerHTML = ""
+
+        dados.forEach(politica => {
+
+            const linhaTabela = `
+                <tr>
+
+                    <td>
+
+                        <strong>
+                            ${politica.titulo}
+                        </strong>
+
+                        <p>
+                            ${politica.descricao}
+                        </p>
+
+                    </td>
+
+                    <td>
+                        <span class="category-tag">
+                            Saúde
+                        </span>
+                    </td>
+
+                    <td>${politica.local_atuacao}</td>
+
+                    <td>
+                        ${politica.publico_alvo}
+                    </td>
+
+                    <td class="actions-cell">
+
+                        <button
+                        class="edit-button"
+                        onclick=editarPolitica(${politica.id})
+                        >
+                            ✏
+                        </button>
+
+                        <button 
+                        class="delete-button"
+                        onclick=deletarPolitica(${politica.id})
+                        >
+                            🗑
+                        </button>
+
+                    </td>
+
+                </tr>
+            `
+
+            bodyTabela.innerHTML += linhaTabela
+        })
+
+    }catch(error){
+        console.error("Erro ao carregar politicas", error)
+    }
+}
 
 }
 
