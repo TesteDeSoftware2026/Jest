@@ -27,15 +27,19 @@
 
         <nav class="header-nav">
 
-            <button class="nav-button">
-                Painel Admin
+            <button id="btn-home" class="nav-button">
+                home
             </button>
 
-            <button class="nav-button">
-                Administrador do Sistema
+            <button id="btn-area" class="nav-button">
+                Minha Área
             </button>
 
-            <button class="logout-button">
+            <button id="btn-nome-perfil" class="nav-button">
+                Usuario
+            </button>
+
+            <button id="btnLogout" class="logout-button">
                 Sair
             </button>
 
@@ -73,6 +77,7 @@
         <section class="toolbar">
 
             <input
+                id="admin-search-input"
                 type="text"
                 placeholder="Buscar políticas..."
                 class="search-input"
@@ -150,5 +155,7 @@
         </section>
 
     </main>
+
+    <script src="../script.js"></script>
 
 </body>
