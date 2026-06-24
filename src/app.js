@@ -14,23 +14,23 @@ const db = require("../src/database/database");
 
 //============================= ROTAS HTML ===========================
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, "../public/pages/login.html"))
+    res.sendFile(path.join(__dirname, "../public", "/pages/login.html"))
 })
 
 app.get('/home', (req, res) => {
-    res.sendFile(path.join(__dirname, "../public/pages/home.html"))
+    res.sendFile(path.join(__dirname, "../public", "/pages/home.html"))
 })
 
 app.get('/admin', (req, res) => {
-    res.sendFile(path.join(__dirname, "../public/pages/admin.html"))
+    res.sendFile(path.join(__dirname, "../public", "/pages/admin.html"))
 })
 
 app.get('/cidadao', (req, res) => {
-    res.sendFile(path.join(__dirname, "../public/pages/cidadao.html"))
+    res.sendFile(path.join(__dirname, "../public", "/pages/cidadao.html"))
 })
 
 app.get('/politicas', (req, res) => {
-    res.sendFile(path.join(__dirname, "../public/pages/politicas.html"))
+    res.sendFile(path.join(__dirname, "../public", "/pages/politicas.html"))
 })
 
 

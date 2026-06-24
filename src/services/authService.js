@@ -4,7 +4,7 @@ const cadastro = async (nome, email, senha, perfil) => {
     
     const [usuarioExiste] = await db.query(`
         select id from usuario
-        where id = ?`, [email])
+        where email = ?`, [email])
 
     if(usuarioExiste.length > 0) throw { status: 409, message: 'E-mail já cadastrado' }
 
@@ -35,7 +35,7 @@ const login = async (email, senha) => {
         select * from usuario
         where email = ? and senha = ?`, [email, senha])
 
-    if(usuarioExiste.length < 1) throw {staus: 401, message: "Conta não encontrada"}
+    if(usuarioExiste.length === 0) throw {status: 404, message: "Conta não encontrada"}
 
     const dados = usuarioExiste[0]
 
