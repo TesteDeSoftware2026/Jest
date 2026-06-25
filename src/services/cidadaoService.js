@@ -40,7 +40,7 @@ const listarSolicitacoes = async (id) => {
 const criarSolicitacao = async (id, id_politica) => {
 
     const [solicitacaoExistente] = await db.query(`
-        select id
+        select *
         from solicitacao
         where id_usuario = ?
         and id_politica = ?
@@ -50,7 +50,7 @@ const criarSolicitacao = async (id, id_politica) => {
         throw {status: 400, message: "Você já demonstrou interesse nessa política pública"}
     }
 
-    const [resultado] = await db.query (`
+    const [resultado] = await db.query(`
         insert into solicitacao (
             id_usuario,
             id_politica,

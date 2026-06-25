@@ -38,6 +38,7 @@ CREATE TABLE IF NOT EXISTS solicitacao (
         'aprovado', 
         'aguardando documento'
     ) NOT NULL DEFAULT 'aguardando documento',
+    ativo BOOLEAN NOT NULL DEFAULT TRUE,
 
     FOREIGN KEY (id_usuario) 
         REFERENCES usuario(id)

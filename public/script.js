@@ -85,9 +85,19 @@ loginForm.addEventListener("submit", async (event) => {
 
 }
 
-let detalhePoliticaId = null
+
+
+
+
+
+
+
+
+
+
 
 //================================== HOME.HTML ==============================
+let detalhePoliticaId = null
 
 if(document.body.id == "home"){
 
@@ -187,6 +197,19 @@ function detalhePolitica(idPolitica){
 }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 //================================ CIDADAO.HTML ====================================
 if(document.body.id == "cidadao"){
     
@@ -232,7 +255,7 @@ async function carregarSolicitacoes() {
             method: "GET"
         })
 
-        const dados = resposta.json()
+        const dados = await resposta.json()
 
         const sectionSolicitaces = document.getElementById("solicitacoes-section")
 
@@ -287,6 +310,18 @@ async function carregarSolicitacoes() {
 }
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 //================================ ADMIN.HTML ====================================
@@ -516,7 +551,19 @@ async function deletarPolitica(id) {
 }
 
 
+
+
+
+
+
+
+
+
+
+
 //================================ POLITICAS.HTML =========================
+
+
 if(document.body.id == "politicas"){
 
     const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"))
@@ -530,27 +577,27 @@ if(document.body.id == "politicas"){
    
     carregarDetalhesPolitica()
 
-    async function carregarDetalhesPolitica() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const politicaId = urlParams.get("id");
+async function carregarDetalhesPolitica() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const politicaId = urlParams.get("id");
 
-        if (!politicaId) {
-            window.location.href = "/home";
-            return;
-        }
+    if (!politicaId) {
+        window.location.href = "/home";
+        return;
+    }
 
-        try {
-            const resposta = await fetch("/cidadao/listar");
-            if (!resposta.ok) throw new Error("Erro ao buscar a lista de políticas.");
-            
-            const dados = await resposta.json(); 
-            const politica = dados.find((item) => item.id == politicaId);
-    
-            if (politica) {
-                document.querySelector(".policy-title").textContent = politica.titulo;
-                document.querySelector(".main-content .content-card:nth-child(1) p").textContent = politica.descricao;
-                document.querySelector(".sidebar .info-item:nth-child(2) p").textContent = politica.publico_alvo;
-                document.querySelector(".sidebar .info-item:nth-child(3) p").textContent = politica.local_atuacao;
+    try {
+        const resposta = await fetch("/cidadao/listar");
+        if (!resposta.ok) throw new Error("Erro ao buscar a lista de políticas.");
+        
+        const dados = await resposta.json(); 
+        const politica = dados.find((item) => item.id == politicaId);
+
+        if (politica) {
+            document.querySelector(".policy-title").textContent = politica.titulo;
+            document.querySelector(".main-content .content-card:nth-child(1) p").textContent = politica.descricao;
+            document.querySelector(".sidebar .info-item:nth-child(2) p").textContent = politica.publico_alvo;
+            document.querySelector(".sidebar .info-item:nth-child(3) p").textContent = politica.local_atuacao;
 
             configurarBotaoInteresse(politicaId,usuarioLogado);
         } else {
@@ -567,9 +614,11 @@ if(document.body.id == "politicas"){
 
 function configurarBotaoInteresse(politicaId, usuarioLogado) {
     const botaoInteresse = document.querySelector(".interest-button");
+    const politicasMain = document.getElementById("politicas-main")
     
     if (!botaoInteresse) return;
     console.log("teste")
+
     botaoInteresse.addEventListener("click", async () => {
         
         try {
@@ -580,13 +629,17 @@ function configurarBotaoInteresse(politicaId, usuarioLogado) {
             
            const resposta = await fetch(`/cidadao/${usuarioLogado.id}/solicitacoes`, {
                     method: "POST",
-                    headers: { "Content-Type": "application/json" },
+                    headers: {"Content-Type": "application/json"},
                     body: JSON.stringify({
                         id_politica: politicaId   
                     })
                 });
 
             const resultado = await resposta.json();
+
+            const politica = resultado.find(item => item.id == politicaId)
+
+            
 
             if (resposta.ok) {
                 botaoInteresse.style.backgroundColor = "#28a745"; 
@@ -609,6 +662,8 @@ function configurarBotaoInteresse(politicaId, usuarioLogado) {
             botaoInteresse.disabled = false;
             botaoInteresse.textContent = "Manifestar Interesse";
         }
+
+
     });
 }
 }
