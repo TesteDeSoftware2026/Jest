@@ -467,8 +467,6 @@ function abrirEdicao(id){
     adminForm.style.display = "flex"
     btnEnviarForm.textContent = "Editar"
 
-    const politica = politicasCache.find(politica => politica.id == id)
-
     titulo.value = politica.titulo
     descricao.value = politica.descricao
     publico.value = politica.publico_alvo
@@ -566,16 +564,40 @@ async function deletarPolitica(id) {
 
 if(document.body.id == "politicas"){
 
-    const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"))
-    const backButton = document.getElementById("back-button")
+const btnLogout = document.getElementById("btnLogout")
 
-    if (backButton) {
-        backButton.addEventListener("click", () => {
-            window.location.href = "/home"
-        })
+btnLogout.addEventListener("click", () => {
+    localStorage.removeItem("usuarioLogado")
+    window.location.href = "/"
+})
+
+const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"))
+
+const navbar = document.querySelector("nav.header-nav")
+const btnArea = document.getElementById("btn-area")
+const btnNomePerfil = document.getElementById("btn-nome-perfil")
+
+const areaText = usuarioLogado.perfil == "admin" ? "Painel Admin" : "Minha Area"
+const nomeText = usuarioLogado ? usuarioLogado.nome : "User"
+
+btnArea.textContent = areaText
+btnNomePerfil.textContent = nomeText
+
+btnArea.addEventListener("click", () => {
+    if(usuarioLogado.perfil == "admin"){
+        window.location.href = "/admin"
+    }else{
+        window.location.href = "/cidadao"
     }
-   
-    carregarDetalhesPolitica()
+})
+
+const backBtn = document.getElementById("back-button")
+
+backBtn.addEventListener("click", () => {
+    window.location.href = "/home"
+})
+
+carregarDetalhesPolitica()
 
 async function carregarDetalhesPolitica() {
     const urlParams = new URLSearchParams(window.location.search);
@@ -599,7 +621,7 @@ async function carregarDetalhesPolitica() {
             document.querySelector(".sidebar .info-item:nth-child(2) p").textContent = politica.publico_alvo;
             document.querySelector(".sidebar .info-item:nth-child(3) p").textContent = politica.local_atuacao;
 
-            configurarBotaoInteresse(politicaId,usuarioLogado);
+            configurarBotaoInteresse(politicaId, usuarioLogado);
         } else {
             console.error("Política não encontrada dentro do array.");
             alert("Política pública não encontrada.");
@@ -613,11 +635,10 @@ async function carregarDetalhesPolitica() {
 
 
 function configurarBotaoInteresse(politicaId, usuarioLogado) {
-    const botaoInteresse = document.querySelector(".interest-button");
+    const botaoInteresse = document.getElementById("enviarInteresse");
     const politicasMain = document.getElementById("politicas-main")
     
     if (!botaoInteresse) return;
-    console.log("teste")
 
     botaoInteresse.addEventListener("click", async () => {
         
@@ -637,9 +658,7 @@ function configurarBotaoInteresse(politicaId, usuarioLogado) {
 
             const resultado = await resposta.json();
 
-            const politica = resultado.find(item => item.id == politicaId)
-
-            
+        
 
             if (resposta.ok) {
                 botaoInteresse.style.backgroundColor = "#28a745"; 
@@ -655,6 +674,8 @@ function configurarBotaoInteresse(politicaId, usuarioLogado) {
 
                 botaoInteresse.disabled = false;
                 botaoInteresse.textContent = "Manifestar Interesse";
+
+                window.location = "/home"
             }
 
         } catch (error) {

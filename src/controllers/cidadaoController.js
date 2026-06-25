@@ -34,18 +34,28 @@ const criarSolicitacao = async (req, res) =>{
         const {id} = req.params
         const {id_politica}= req.body
 
-        if(!id_politica){
-            return res.status(400).json({erro: "O campo id_policita é obrigatório"})
-        }
+        console.log("id usuario:", id)
+        console.log("id politica:", id_politica)
 
         const resultado = await cidadaoService.criarSolicitacao(id, id_politica)
 
-        res.status(201).json({message: "Solicitacao registrada com sucesso", id_solicitacao: resultado.insertId})
+        res.status(201).json({
+            message: "Solicitacao registrada com sucesso",
+            id_solicitacao: resultado.insertId
+        })
+
     }catch(err){
-        if (error.status) {
-            return res.status(error.status).json({ erro: error.message });
+        console.error("ERRO COMPLETO:", err)
+
+        if (err.status) {
+            return res.status(err.status).json({
+                erro: err.message
+            });
         }
-        res.status(500).json({erro: "Erro ao registrar solicitação do cidadão"})
+
+        res.status(500).json({
+            erro: "Erro ao registrar solicitação do cidadão"
+        });
     }
 }
 
