@@ -1,3 +1,8 @@
+function formatarData(data) {
+    if (!data) return "-";  
+    return new Date(data).toLocaleDateString("pt-BR");
+}  
+
 //========================== LOGIN.HTML ===============================
 if(document.body.id == "login-cadastro"){
 
@@ -220,64 +225,61 @@ btnHome.addEventListener("click", () => {
     window.location.href = "/home"
 })
 
-async function carregarPoliticas() {
+
+async function carregarSolicitacoes() {
     try{
 
-        const resposta = await fetch(`/cidadao/carregarPoliticas`, {
+        const resposta = await fetch(`/cidadao/${usuarioLogado.id}/solicitacoes`, {
             method: "GET"
         })
 
         const dados = resposta.json()
 
-        dados.forEach(politica => {
+        const sectionSolicitaces = document.getElementById("solicitacoes-section")
+
+        sectionSolicitaces.innerHTML = `<h2>Minhas Solicitações</h2>`
+
+        dados.forEach(solicitacao => {
 
             const linhaTabela = `
-                <tr>
+                <div class="request-item">
 
-                    <td>
+                    <div class="request-header">
 
-                        <strong>
-                            ${politica.titulo}
-                        </strong>
+                        <div>
 
-                        <p>
-                            ${politica.descricao}
-                        </p>
+                            <h3>
+                                ${solicitacao.politica}
+                            </h3>
 
-                    </td>
+                            <p class="request-date">
+                                Solicitado em ${formatarData(solicitacao.data_solicitacao)} • Atualizado em ${formatarData(solicitacao.data_atualizacao)}
+                            </p>
 
-                    <td>
-                        <span class="category-tag">
-                            Saúde
+                        </div>
+
+                        <span class="status-badge status-analysis">
+                            ${solicitacao.status_atual}
                         </span>
-                    </td>
 
-                    <td>${politica.local_atuacao}</td>
+                    </div>
 
-                    <td>
-                        ${politica.publico_alvo}
-                    </td>
+                    <div class="next-step">
 
-                    <td class="actions-cell">
+                        <strong>Próximo passo:</strong>
 
-                        <button
-                        class="edit-button"
-                        onclick=editarPolitica(${politica.id})
-                        >
-                            ✏
-                        </button>
+                        Aguardando análise da documentação
 
-                        <button 
-                        class="delete-button"
-                        onclick=deletarPolitica(${politica.id})
-                        >
-                            🗑
-                        </button>
+                    </div>
 
-                    </td>
+                    <a class="details-link">
+                        Ver detalhes
+                    </a>
 
-                </tr>
+                </div>
             `
+
+            sectionSolicitaces.innerHTML += linhaTabela
         })
 
     }catch(error){
@@ -431,7 +433,7 @@ function abrirEdicao(id){
     adminForm.style.display = "flex"
     btnEnviarForm.textContent = "Editar"
 
-    const politica = politicasCache.find((item) => item.id == id)
+    const politica = politicasCache.find(politica => politica.id == id)
 
     titulo.value = politica.titulo
     descricao.value = politica.descricao
@@ -530,6 +532,5 @@ backButton.addEventListener("click", () => {
 const idDetalhe = detalhePoliticaId
 
 /* logica da pagina dinamica */
-
-
+ 
 }
