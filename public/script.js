@@ -80,6 +80,8 @@ loginForm.addEventListener("submit", async (event) => {
 
 }
 
+let detalhePoliticaId = null
+
 //================================== HOME.HTML ==============================
 
 if(document.body.id == "home"){
@@ -121,6 +123,7 @@ async function carregarPoliticas() {
     try{
 
         console.log("antes do fetch ")
+        
         console.log(usuarioLogado.perfil)
 
         const resposta = await fetch(`/${usuarioLogado.perfil}/listar`, {
@@ -172,6 +175,9 @@ async function carregarPoliticas() {
     }
 }
 
+function detalhePolitica(idPolitica){
+    window.location.href = `/politicas?id=${idPolitica}`;
+}
 
 }
 
@@ -461,7 +467,6 @@ btnEnviarForm.addEventListener("click", async (event) => {
             });
 
             if (resposta.ok) {
-                // Exibe mensagem dinâmica baseada na ação realizada
                 const acao = idEdicao ? "editada" : "cadastrada";
                 alert(`Política ${acao} com sucesso!`);
                 
@@ -469,7 +474,7 @@ btnEnviarForm.addEventListener("click", async (event) => {
                 adminForm.reset(); 
                 idEdicao = null; // Reseta a variável de controle
                 
-                // Dica: Chame sua função carregarPoliticas() aqui para atualizar a tabela na tela!
+                carregarPoliticas()
             } else {
                 console.error("O servidor respondeu com erro:", resposta.status);
             }
@@ -479,5 +484,80 @@ btnEnviarForm.addEventListener("click", async (event) => {
         
     })
 
+async function deletarPolitica(id) {
+    const confirmar = confirm("Tem certeza que deseja excluir esta política pública?")
+
+    if (!confirmar) {return}
+
+    try {
+        const resposta = await fetch(`/admin/deletar/${id}`, {
+            method: "DELETE"
+        })
+
+        const dados = await resposta.json()
+
+        if (resposta.ok) {
+            alert(dados.mensagem || "Política excluída com sucesso")
+            carregarPoliticas()
+        }
+        else {
+            alert(dados.erro || "Erro ao excluir política pública")
+        }
+    }
+    catch (error) {
+        console.error("Erro ao excluir política:", error)
+        alert("Erro ao tentar excluir política pública")
+    }
 }
 
+}
+
+
+//================================ POLITICAS.HTML =========================
+if(document.body.id == "politicas"){
+
+    const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"))
+    const backButton = document.getElementById("back-button")
+
+    if (backButton) {
+        backButton.addEventListener("click", () => {
+            window.location.href = "/home"
+        })
+    }
+   
+    carregarDetalhesPolitica()
+
+    async function carregarDetalhesPolitica() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const politicaId = urlParams.get("id");
+
+    if (!politicaId) {
+        window.location.href = "/home";
+        return;
+    }
+
+    try {
+        const resposta = await fetch("/cidadao/listar");
+        if (!resposta.ok) throw new Error("Erro ao buscar a lista de políticas.");
+        
+        const dados = await resposta.json(); 
+        const politica = dados.find((item) => item.id == politicaId);
+ 
+        if (politica) {
+            document.querySelector(".policy-title").textContent = politica.titulo;
+            document.querySelector(".main-content .content-card:nth-child(1) p").textContent = politica.descricao;
+            document.querySelector(".sidebar .info-item:nth-child(2) p").textContent = politica.publico_alvo;
+            document.querySelector(".sidebar .info-item:nth-child(3) p").textContent = politica.local_atuacao;
+
+            
+        } else {
+            console.error("Política não encontrada dentro do array.");
+            alert("Política pública não encontrada.");
+            window.location.href = "/home";
+        }
+
+    } catch (error) {
+        console.error("Erro ao renderizar dados da política:", error);
+    }
+}
+}

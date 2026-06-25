@@ -91,7 +91,7 @@ DB_HOST=localhost
 DB_PORT=3306
 DB_USER=*seu user*
 DB_PASSWORD=*sua senha*
-DB_NAME=web_library_db
+DB_NAME=jest_db
 ```
 
 Ao fazer a conexão manual na extensão coloque o database como "web_library_db"
