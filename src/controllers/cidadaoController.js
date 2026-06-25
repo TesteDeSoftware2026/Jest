@@ -18,7 +18,7 @@ const listarPoliticas = async (req, res) => {
 const listarSolicitacoes = async (req, res) => {
 
     try{
-        const {id}= req.params
+        const { id }= req.params
 
         const solicitacoes = await cidadaoService.listarSolicitacoes(id)
 
@@ -40,8 +40,11 @@ const criarSolicitacao = async (req, res) =>{
 
         const resultado = await cidadaoService.criarSolicitacao(id, id_politica)
 
-        res.status(201).json({mensagem: "Solicitacao registrada com sucesso", id_solicitacao: resultado.insertId})
+        res.status(201).json({message: "Solicitacao registrada com sucesso", id_solicitacao: resultado.insertId})
     }catch(err){
+        if (error.status) {
+            return res.status(error.status).json({ erro: error.message });
+        }
         res.status(500).json({erro: "Erro ao registrar solicitação do cidadão"})
     }
 }

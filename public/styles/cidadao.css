@@ -143,6 +143,9 @@
     color: #003DA5;
 
     font-weight: bold;
+
+    border: none;
+    background-color: transparent;
 }
 
 /* STATUS */

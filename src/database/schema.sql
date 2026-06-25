@@ -1,7 +1,7 @@
 -- Active: 1781902788821@@127.0.0.1@3306@jest_db
 CREATE DATABASE IF NOT EXISTS jest_db;
 
-use jest_db;
+use efeo;
 
 -- drop na tabela associativa primeiro
 DROP TABLE solicitacao;
@@ -38,6 +38,7 @@ CREATE TABLE IF NOT EXISTS solicitacao (
         'aprovado', 
         'aguardando documento'
     ) NOT NULL DEFAULT 'aguardando documento',
+    ativo BOOLEAN NOT NULL DEFAULT TRUE,
 
     FOREIGN KEY (id_usuario) 
         REFERENCES usuario(id)

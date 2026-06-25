@@ -1,3 +1,8 @@
+function formatarData(data) {
+    if (!data) return "-";  
+    return new Date(data).toLocaleDateString("pt-BR");
+}  
+
 //========================== LOGIN.HTML ===============================
 if (document.body.id == "login-cadastro") {
   const btnIrParaCadastro = document.getElementById("btnIrParaCadastro");
@@ -77,9 +82,19 @@ if (document.body.id == "login-cadastro") {
   });
 }
 
-let detalhePoliticaId = null;
+
+
+
+
+
+
+
+
+
+
 
 //================================== HOME.HTML ==============================
+let detalhePoliticaId = null
 
 if (document.body.id == "home") {
   const btnLogout = document.getElementById("btnLogout");
@@ -175,6 +190,22 @@ if (document.body.id == "home") {
   }
 }
 
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //================================ CIDADAO.HTML ====================================
 if (document.body.id == "cidadao") {
   const btnLogout = document.getElementById("btnLogout");
@@ -207,74 +238,84 @@ if (document.body.id == "cidadao") {
     }
   });
 
-  const btnHome = document.getElementById("btn-home");
+carregarSolicitacoes()
 
-  btnHome.addEventListener("click", () => {
-    window.location.href = "/home";
-  });
+async function carregarSolicitacoes() {
+    try{
 
-  async function carregarPoliticas() {
-    try {
-      const resposta = await fetch(`/cidadao/carregarPoliticas`, {
-        method: "GET",
-      });
+        const resposta = await fetch(`/cidadao/${usuarioLogado.id}/solicitacoes`, {
+            method: "GET"
+        })
 
-      const dados = resposta.json();
+        const dados = await resposta.json()
 
-      dados.forEach((politica) => {
-        const linhaTabela = `
-                <tr>
+        const sectionSolicitaces = document.getElementById("solicitacoes-section")
 
-                    <td>
+        sectionSolicitaces.innerHTML = ``
 
-                        <strong>
-                            ${politica.titulo}
-                        </strong>
+        dados.forEach(solicitacao => {
 
-                        <p>
-                            ${politica.descricao}
-                        </p>
+            const linhaTabela = `
+                <div class="request-item">
 
-                    </td>
+                    <div class="request-header">
 
-                    <td>
-                        <span class="category-tag">
-                            Saúde
+                        <div>
+
+                            <h3>
+                                ${solicitacao.politica}
+                            </h3>
+
+                            <p class="request-date">
+                                Solicitado em ${formatarData(solicitacao.data_solicitacao)} • Atualizado em ${formatarData(solicitacao.data_atualizacao)}
+                            </p>
+
+                        </div>
+
+                        <span class="status-badge status-analysis">
+                            ${solicitacao.status_atual}
                         </span>
-                    </td>
 
-                    <td>${politica.local_atuacao}</td>
+                    </div>
 
-                    <td>
-                        ${politica.publico_alvo}
-                    </td>
+                    <div class="next-step">
 
-                    <td class="actions-cell">
+                        <strong>Próximo passo:</strong>
 
-                        <button
-                        class="edit-button"
-                        onclick=editarPolitica(${politica.id})
-                        >
-                            ✏
-                        </button>
+                        Aguardando análise da documentação
 
-                        <button 
-                        class="delete-button"
-                        onclick=deletarPolitica(${politica.id})
-                        >
-                            🗑
-                        </button>
+                    </div>
 
-                    </td>
+                    <a class="details-link">
+                        Ver detalhes
+                    </a>
 
-                </tr>
-            `;
-      });
-    } catch (error) {
-      console.error("Erro ao carregar politicas", error);
+                </div>
+            `
+
+            sectionSolicitaces.innerHTML += linhaTabela
+        })
+
+    }catch(error){
+        console.error("Erro ao carregar politicas", error)
     }
   }
 }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 //================================ ADMIN.HTML ====================================
 if (document.body.id == "admin") {
@@ -441,6 +482,97 @@ if (document.body.id == "admin") {
       url = `/admin/editar/${idEdicao}`;
       metodo = "PUT";
     }
+}
+
+const btnVaiCadastrar = document.getElementById("btnVaiCadastrar")
+const btnEnviarForm = document.getElementById("btnEnviarForm")
+const btnCancelarCadastro = document.getElementById("btnCancelarCadastro")
+const adminForm = document.getElementById("admin-form")
+
+const titulo = document.getElementById("form-titulo")
+const descricao = document.getElementById("form-descricao")
+const publico = document.getElementById("form-publico")
+const local = document.getElementById("form-local")
+let idEdicao = null
+
+adminForm.style.display = "none"
+
+btnCancelarCadastro.addEventListener("click", () => {
+    adminForm.style.display = "none"
+})
+
+
+btnVaiCadastrar.addEventListener("click", async function cadastrarPolitica(){
+
+    adminForm.style.display = "flex"
+    btnEnviarForm.textContent = "Cadastrar"
+    idEdicao = null
+})
+
+function abrirEdicao(id){
+
+    adminForm.style.display = "flex"
+    btnEnviarForm.textContent = "Editar"
+
+    const politica = politicasCache.find(politica => politica.id == id)
+
+    titulo.value = politica.titulo
+    descricao.value = politica.descricao
+    publico.value = politica.publico_alvo
+    local.value = politica.local_atuacao
+
+    idEdicao = id
+}
+
+btnEnviarForm.addEventListener("click", async (event) => {
+        event.preventDefault()
+
+        const dadosFormulario = {
+            titulo: titulo.value,
+            descricao: descricao.value,
+            publico_alvo: publico.value,
+            local_atuacao: local.value
+        };
+
+        // Define dinamicamente qual será a URL e o Método com base na nossa variável de controle
+        let url = "/admin/criar";
+        let metodo = "POST";
+
+        // Se houver um ID guardado na variável global, muda o comportamento para Edição
+        if (idEdicao !== null) {
+            url = `/admin/editar/${idEdicao}`;
+            metodo = "PUT";
+        }
+
+        try {
+            const resposta = await fetch(url, {
+                method: metodo,
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(dadosFormulario)
+            });
+
+            if (resposta.ok) {
+                const acao = idEdicao ? "editada" : "cadastrada";
+                alert(`Política ${acao} com sucesso!`);
+                
+                adminForm.style.display = "none"; 
+                adminForm.reset(); 
+                idEdicao = null; // Reseta a variável de controle
+                
+                carregarPoliticas()
+            } else {
+                console.error("O servidor respondeu com erro:", resposta.status);
+            }
+        } catch (error) {
+            console.error("Erro na requisição:", error);
+        }
+        
+    })
+
+async function deletarPolitica(id) {
+    const confirmar = confirm("Tem certeza que deseja excluir esta política pública?")
+
+    if (!confirmar) {return}
 
     try {
       const resposta = await fetch(url, {
@@ -495,10 +627,21 @@ if (document.body.id == "admin") {
   }
 }
 
+
+
+
+
+
+
+
+
+
+
+
 //================================ POLITICAS.HTML =========================
-if (document.body.id == "politicas") {
-  const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
-  const backButton = document.getElementById("back-button");
+
+
+if(document.body.id == "politicas"){
 
   if (backButton) {
     backButton.addEventListener("click", () => {
@@ -508,7 +651,7 @@ if (document.body.id == "politicas") {
 
   carregarDetalhesPolitica();
 
-  async function carregarDetalhesPolitica() {
+async function carregarDetalhesPolitica() {
     const urlParams = new URLSearchParams(window.location.search);
     const politicaId = urlParams.get("id");
 
@@ -518,30 +661,25 @@ if (document.body.id == "politicas") {
     }
 
     try {
-      const resposta = await fetch("/cidadao/listar");
-      if (!resposta.ok) throw new Error("Erro ao buscar a lista de políticas.");
+        const resposta = await fetch("/cidadao/listar");
+        if (!resposta.ok) throw new Error("Erro ao buscar a lista de políticas.");
+        
+        const dados = await resposta.json(); 
+        const politica = dados.find((item) => item.id == politicaId);
 
-      const dados = await resposta.json();
-      const politica = dados.find((item) => item.id == politicaId);
+        if (politica) {
+            document.querySelector(".policy-title").textContent = politica.titulo;
+            document.querySelector(".main-content .content-card:nth-child(1) p").textContent = politica.descricao;
+            document.querySelector(".sidebar .info-item:nth-child(2) p").textContent = politica.publico_alvo;
+            document.querySelector(".sidebar .info-item:nth-child(3) p").textContent = politica.local_atuacao;
 
-      if (politica) {
-        document.querySelector(".policy-title").textContent = politica.titulo;
-        document.querySelector(
-          ".main-content .content-card:nth-child(1) p",
-        ).textContent = politica.descricao;
-        document.querySelector(
-          ".sidebar .info-item:nth-child(2) p",
-        ).textContent = politica.publico_alvo;
-        document.querySelector(
-          ".sidebar .info-item:nth-child(3) p",
-        ).textContent = politica.local_atuacao;
+            configurarBotaoInteresse(politicaId,usuarioLogado);
+        } else {
+            console.error("Política não encontrada dentro do array.");
+            alert("Política pública não encontrada.");
+            window.location.href = "/home";
+        }
 
-        configurarBotaoInteresse(politicaId, usuarioLogado);
-      } else {
-        console.error("Política não encontrada dentro do array.");
-        alert("Política pública não encontrada.");
-        window.location.href = "/home";
-      }
     } catch (error) {
       console.error("Erro ao renderizar dados da política:", error);
     }
@@ -549,51 +687,56 @@ if (document.body.id == "politicas") {
 
   function configurarBotaoInteresse(politicaId, usuarioLogado) {
     const botaoInteresse = document.querySelector(".interest-button");
-
+    const politicasMain = document.getElementById("politicas-main")
+    
     if (!botaoInteresse) return;
-    console.log("teste");
+    console.log("teste")
+
     botaoInteresse.addEventListener("click", async () => {
-      try {
-        botaoInteresse.disabled = true;
-        botaoInteresse.textContent = "Processando...";
+        
+        try {
 
-        const resposta = await fetch(
-          `/cidadao/${usuarioLogado.id}/solicitacoes`,
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              id_politica: politicaId,
-            }),
-          },
-        );
+            botaoInteresse.disabled = true;
+            botaoInteresse.textContent = "Processando...";
 
-        const resultado = await resposta.json();
+            
+           const resposta = await fetch(`/cidadao/${usuarioLogado.id}/solicitacoes`, {
+                    method: "POST",
+                    headers: {"Content-Type": "application/json"},
+                    body: JSON.stringify({
+                        id_politica: politicaId   
+                    })
+                });
 
-        if (resposta.ok) {
-          botaoInteresse.style.backgroundColor = "#28a745";
-          botaoInteresse.textContent = "Interesse Manifestado!";
+            const resultado = await resposta.json();
 
-          alert(
-            "Interesse registrado com sucesso! Redirecionando para a sua área...",
-          );
+            const politica = resultado.find(item => item.id == politicaId)
 
-          window.location.href = "/cidadao";
-        } else {
-          alert(
-            resultado.message ||
-              resultado.erro ||
-              "Erro ao registrar interesse.",
-          );
+            
 
-          botaoInteresse.disabled = false;
-          botaoInteresse.textContent = "Manifestar Interesse";
+            if (resposta.ok) {
+                botaoInteresse.style.backgroundColor = "#28a745"; 
+                botaoInteresse.textContent = "Interesse Manifestado!";
+                
+                alert("Interesse registrado com sucesso! Redirecionando para a sua área...");
+
+            
+                window.location.href = "/cidadao";
+            } else {
+                
+                alert(resultado.message || resultado.erro || "Erro ao registrar interesse.");
+
+                botaoInteresse.disabled = false;
+                botaoInteresse.textContent = "Manifestar Interesse";
+            }
+
+        } catch (error) {
+            console.error("Erro ao salvar solicitação:", error);
+            botaoInteresse.disabled = false;
+            botaoInteresse.textContent = "Manifestar Interesse";
         }
-      } catch (error) {
-        console.error("Erro ao salvar solicitação:", error);
-        botaoInteresse.disabled = false;
-        botaoInteresse.textContent = "Manifestar Interesse";
-      }
+
+
     });
   }
 }
