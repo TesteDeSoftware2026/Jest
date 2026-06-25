@@ -552,18 +552,63 @@ if(document.body.id == "politicas"){
                 document.querySelector(".sidebar .info-item:nth-child(2) p").textContent = politica.publico_alvo;
                 document.querySelector(".sidebar .info-item:nth-child(3) p").textContent = politica.local_atuacao;
 
+            configurarBotaoInteresse(politicaId,usuarioLogado);
+        } else {
+            console.error("Política não encontrada dentro do array.");
+            alert("Política pública não encontrada.");
+            window.location.href = "/home";
+        }
+
+    } catch (error) {
+        console.error("Erro ao renderizar dados da política:", error);
+    }
+}
+
+
+function configurarBotaoInteresse(politicaId, usuarioLogado) {
+    const botaoInteresse = document.querySelector(".interest-button");
+    
+    if (!botaoInteresse) return;
+    console.log("teste")
+    botaoInteresse.addEventListener("click", async () => {
+        
+        try {
+
+            botaoInteresse.disabled = true;
+            botaoInteresse.textContent = "Processando...";
+
+            
+           const resposta = await fetch(`/cidadao/${usuarioLogado.id}/solicitacoes`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        id_politica: politicaId   
+                    })
+                });
+
+            const resultado = await resposta.json();
+
+            if (resposta.ok) {
+                botaoInteresse.style.backgroundColor = "#28a745"; 
+                botaoInteresse.textContent = "Interesse Manifestado!";
                 
+                alert("Interesse registrado com sucesso! Redirecionando para a sua área...");
+
+            
+                window.location.href = "/cidadao";
             } else {
-                console.error("Política não encontrada dentro do array.");
-                alert("Política pública não encontrada.");
-                window.location.href = "/home";
+                
+                alert(resultado.message || resultado.erro || "Erro ao registrar interesse.");
+
+                botaoInteresse.disabled = false;
+                botaoInteresse.textContent = "Manifestar Interesse";
             }
 
         } catch (error) {
-            console.error("Erro ao renderizar dados da política:", error);
+            console.error("Erro ao salvar solicitação:", error);
+            botaoInteresse.disabled = false;
+            botaoInteresse.textContent = "Manifestar Interesse";
         }
-
-    }
-
-    
+    });
+}
 }
