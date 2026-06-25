@@ -62,7 +62,6 @@ loginForm.addEventListener("submit", async (event) => {
     const email = document.getElementById("login-email").value
     const senha = document.getElementById("login-senha").value
 
-    console.log(email, senha)
 
     const resposta = await fetch("/auth/login", {
         method: "POST",
@@ -130,22 +129,14 @@ btnArea.addEventListener("click", () => {
 
 const politicasSection = document.getElementById("politicas-section")
 
-console.log("antes da função")
-
 carregarPoliticas()
 
 async function carregarPoliticas() {
     try{
 
-        console.log("antes do fetch ")
-        
-        console.log(usuarioLogado.perfil)
-
         const resposta = await fetch(`/${usuarioLogado.perfil}/listar`, {
             method: "GET"
         })
-
-        console.log("depois do fetch ")
 
         const dados = await resposta.json()
 
@@ -601,7 +592,7 @@ carregarDetalhesPolitica()
 
 async function carregarDetalhesPolitica() {
     const urlParams = new URLSearchParams(window.location.search);
-    const politicaId = urlParams.get("id");
+    const politicaId = Number(urlParams.get("id"));
 
     if (!politicaId) {
         window.location.href = "/home";
@@ -615,13 +606,18 @@ async function carregarDetalhesPolitica() {
         const dados = await resposta.json(); 
         const politica = dados.find((item) => item.id == politicaId);
 
+        const conferePolitica = await fetch(`/cidadao/${usuarioLogado.id}/solicitacoes`, {
+            method: "GET"
+        })
+        const politicaMarcada = await conferePolitica.json()
+
         if (politica) {
             document.querySelector(".policy-title").textContent = politica.titulo;
             document.querySelector(".main-content .content-card:nth-child(1) p").textContent = politica.descricao;
             document.querySelector(".sidebar .info-item:nth-child(2) p").textContent = politica.publico_alvo;
             document.querySelector(".sidebar .info-item:nth-child(3) p").textContent = politica.local_atuacao;
 
-            configurarBotaoInteresse(politicaId, usuarioLogado);
+            configurarBotaoInteresse(politicaMarcada, politicaId, usuarioLogado);
         } else {
             console.error("Política não encontrada dentro do array.");
             alert("Política pública não encontrada.");
@@ -634,11 +630,24 @@ async function carregarDetalhesPolitica() {
 }
 
 
-function configurarBotaoInteresse(politicaId, usuarioLogado) {
+function configurarBotaoInteresse(politicaMarcada, politicaId, usuarioLogado) {
     const botaoInteresse = document.getElementById("enviarInteresse");
     const politicasMain = document.getElementById("politicas-main")
     
     if (!botaoInteresse) return;
+
+
+    const jaManifestou = politicaMarcada.some(
+        solicitacao => solicitacao.id_politica == politicaId
+    );
+
+    if (jaManifestou) {
+        botaoInteresse.style.backgroundColor = "#28a745";
+        botaoInteresse.textContent = "Interesse Manifestado!";
+        botaoInteresse.disabled = true;
+        return; // não deixa adicionar outro evento
+    }
+    
 
     botaoInteresse.addEventListener("click", async () => {
         
