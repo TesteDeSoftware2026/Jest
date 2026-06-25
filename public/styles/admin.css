@@ -198,3 +198,44 @@ td p{
 
     color: red;
 }
+
+.editConfirm-button{
+    background-color: #003DA5;
+    width: 100%;
+}
+.cancel-button{
+    background-color: red;
+    width: 100%;
+}
+
+
+#admin-form{
+    display: flex;
+    flex-direction: row;
+    gap: 1em;
+}
+
+#admin-form fieldset{
+    
+    border: none;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: end;
+    padding: 0.5em 0;
+    gap: 0.5em;
+}
+
+#admin-form label{
+    margin-bottom: 0.5em;
+    font-weight: bold;
+}
+
+#admin-form input{
+    width: 95%;
+    height: 2.5em;
+    border-radius: 7px;
+    border: 1px solid #505050;
+    padding-left: 1em;
+    
+}

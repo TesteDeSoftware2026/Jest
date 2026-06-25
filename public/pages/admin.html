@@ -73,8 +73,59 @@
 
         </section>
 
+        <form id="admin-form" action="" method="post">
+
+                <fieldset>
+                    <label for="form-titulo">Titulo</label>
+                    <input 
+                        type="text"
+                        id="form-titulo"
+                        class="form-input"
+                    >
+                </fieldset>
+
+
+                <fieldset>
+                    <label for="form-descricao">Descricao</label>
+                    <input 
+                        type="text"
+                        id="form-descricao"
+                        class="form-input"
+                    >
+                </fieldset>
+
+
+                <fieldset>
+                    <label for="form-publico">Publico Alvo</label>
+                    <input 
+                        type="text"
+                        id="form-publico"
+                        class="form-input"
+                    >
+                </fieldset>
+
+
+                <fieldset>
+                    <label for="form-local">Local de Atuação</label>
+                    <input 
+                        type="text"
+                        id="form-local"
+                        class="form-input"
+                    >
+                </fieldset>
+
+                <fieldset>
+                    <button id="btnEnviarForm" class="new-policy-button editConfirm-button" type="submit">Cadastrar</button>
+                    <button id="btnCancelarCadastro" class="new-policy-button cancel-button" type="button">Cancelar</button>
+                </fieldset>
+
+
+            </form>
+
 
         <section class="toolbar">
+
+            
 
             <input
                 id="admin-search-input"
@@ -83,7 +134,7 @@
                 class="search-input"
             >
 
-            <button class="new-policy-button">
+            <button id="btnVaiCadastrar" class="new-policy-button">
                 + Nova Política
             </button>
 
