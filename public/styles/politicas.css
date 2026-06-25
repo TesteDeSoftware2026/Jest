@@ -9,14 +9,13 @@
 .back-button{
 
     text-decoration: none;
-
     color: #003DA5;
-
     font-weight: bold;
-
     display: inline-block;
-
     margin-bottom: 1rem;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
 }
 
 .policy-title{

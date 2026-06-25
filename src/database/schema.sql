@@ -1,4 +1,4 @@
--- Active: 1781990375689@@localhost@3306@jest
+-- Active: 1781899678783@@127.0.0.1@3306@jest_db
 CREATE DATABASE IF NOT EXISTS jest_db;
 
 use jest_db;

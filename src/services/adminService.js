@@ -15,7 +15,7 @@ const criarPolitica = async(titulo,descricao,publico_alvo,local_atuacao)=>{
     }
 }
 
-const listarPolitica = async() => {
+const listarPolitica = async () => {
 
     const [politicas] = await db.query(`SELECT * FROM politica`);
 

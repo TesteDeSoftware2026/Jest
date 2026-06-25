@@ -80,6 +80,8 @@ loginForm.addEventListener("submit", async (event) => {
 
 }
 
+let detalhePoliticaId = null
+
 //================================== HOME.HTML ==============================
 
 if(document.body.id == "home"){
@@ -121,6 +123,7 @@ async function carregarPoliticas() {
     try{
 
         console.log("antes do fetch ")
+        
         console.log(usuarioLogado.perfil)
 
         const resposta = await fetch(`/${usuarioLogado.perfil}/listar`, {
@@ -170,6 +173,11 @@ async function carregarPoliticas() {
     }catch(error){
         console.error("Erro ao carregar politicas", error)
     }
+}
+
+function detalhePolitica(idPolitica){
+    detalhePoliticaId = idPolitica
+    window.location.href = "/politicas"
 }
 
 
@@ -506,3 +514,22 @@ async function deletarPolitica(id) {
 
 }
 
+
+
+//================================ POLITICAS.HTML =========================
+
+if(document.body.id == "politicas"){
+
+const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"))
+const backButton = document.getElementById("back-button")
+
+backButton.addEventListener("click", () => {
+    window.location.href = "/home"
+})
+
+const idDetalhe = detalhePoliticaId
+
+/* logica da pagina dinamica */
+
+
+}
