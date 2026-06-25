@@ -12,5 +12,7 @@ router.get("/listar",adminController.listar);
 
 router.put("/editar/:id",adminController.atualizar);
 
+router.delete ("/deletar/:id", adminController.deletar);
+
 //exporta o "router"
 module.exports = router

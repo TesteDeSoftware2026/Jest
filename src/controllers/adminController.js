@@ -59,8 +59,26 @@ const atualizar = async (req,res)=>{
     }
 }
 
+const deletar = async (req, res) => {
+    try {
+        const { id } = req.params
+
+        const resultado = await adminService.deletarPolitica(id)
+
+        return res.status(200).json(resultado)
+    }
+    catch (error) {
+        if (error.status) {
+            return res.status(error.status).json({erro: error.message})
+        }
+
+        return res.status(500).json({erro: "Erro ao excluir política"})
+    }
+}
+
 module.exports = {
     criar,
     listar,
-    atualizar
+    atualizar,
+    deletar
 };
