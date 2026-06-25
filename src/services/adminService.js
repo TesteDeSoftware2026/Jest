@@ -49,7 +49,7 @@ const atualizarPoliticas = async (id, titulo, descricao, publico_alvo, local_atu
 
 const deletarPolitica = async (id) => {
     const [politicaEncontrada] = await db.query(`
-        select id
+        select *
         from politica
         where id = ?
     `, [id])
