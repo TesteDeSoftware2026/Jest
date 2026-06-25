@@ -121,6 +121,7 @@ async function carregarPoliticas() {
     try{
 
         console.log("antes do fetch ")
+        
         console.log(usuarioLogado.perfil)
 
         const resposta = await fetch(`/${usuarioLogado.perfil}/listar`, {
