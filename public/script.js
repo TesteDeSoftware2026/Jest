@@ -318,6 +318,8 @@ btnHome.addEventListener("click", () => {
 
 const bodyTabela = document.getElementById("bodyTabela")
 
+let politicasCache = []
+
 carregarPoliticas()
 
 async function carregarPoliticas() {
@@ -329,10 +331,11 @@ async function carregarPoliticas() {
         })
 
         const dados = await resposta.json()
+        politicasCache = dados || []
 
         bodyTabela.innerHTML = ""
 
-        dados.forEach(politica => {
+        politicasCache.forEach(politica => {
 
             const linhaTabela = `
                 <tr>
@@ -365,7 +368,7 @@ async function carregarPoliticas() {
 
                         <button
                         class="edit-button"
-                        onclick=editarPolitica(${politica.id})
+                        onclick=abrirEdicao(${politica.id})
                         >
                             ✏
                         </button>
@@ -388,6 +391,84 @@ async function carregarPoliticas() {
     }catch(error){
         console.error("Erro ao carregar politicas", error)
     }
+}
+
+const btnVaiCadastrar = document.getElementById("btnVaiCadastrar")
+const btnEnviarForm = document.getElementById("btnEnviarForm")
+const btnCancelarCadastro = document.getElementById("btnCancelarCadastro")
+const adminForm = document.getElementById("admin-form")
+
+const titulo = document.getElementById("form-titulo")
+const descricao = document.getElementById("form-descricao")
+const publico = document.getElementById("form-publico")
+const local = document.getElementById("form-local")
+
+adminForm.style.display = "none"
+
+btnVaiCadastrar.addEventListener("click", async function cadastrarPolitica(){
+
+    adminForm.style.display = "flex"
+    btnEnviarForm.textContent = "Cadastrar"
+})
+
+btnEnviarForm.addEventListener("click", async (event) => {
+        event.preventDefault()
+
+        try{
+            const resposta = await fetch("/admin/criar", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({
+                    titulo: titulo.value,
+                    descricao: descricao.value,
+                    publico_alvo: publico.value,
+                    local_atuacao: local.value
+                })
+            })
+
+            if (resposta.ok) {
+                alert("Política cadastrada com sucesso!");
+                adminForm.style.display = "none"; // Esconde o form de novo
+                adminForm.reset(); // Limpa os campos do formulário
+            } else {
+                console.error("O servidor respondeu com erro:", resposta.status);
+            }
+        }catch(error){
+            console.error("Erro na requisição:", error);
+        }
+
+        
+    })
+
+btnCancelarCadastro.addEventListener("click", () => {
+    adminForm.style.display = "none"
+})
+
+function abrirEdicao(id){
+
+    adminForm.style.display = "flex"
+    btnEnviarForm.textContent = "Editar"
+
+    const politica = politicasCache.find((item) => item.id == id)
+
+    titulo.value = politica.titulo
+    descricao.value = politica.descricao
+    publico.value = politica.publico_alvo
+    local.value = politica.local_atuacao
+
+    btnEnviarForm.addEventListener("click", async (event) => {
+        event.preventDefault()
+
+        const resposta = await fetch(`/admin/editar/${id}`, {
+            method: "PUT",
+            body: JSON.stringify({
+                titulo: titulo.value,
+                descricao: descricao.value,
+                publico_alvo: publico.value,
+                local_atuacao: local.value
+            })
+        })
+    })
 }
 
 }
