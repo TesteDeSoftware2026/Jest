@@ -176,10 +176,8 @@ async function carregarPoliticas() {
 }
 
 function detalhePolitica(idPolitica){
-    detalhePoliticaId = idPolitica
-    window.location.href = "/politicas"
+    window.location.href = `/politicas?id=${idPolitica}`;
 }
-
 
 }
 
@@ -515,21 +513,51 @@ async function deletarPolitica(id) {
 }
 
 
-
 //================================ POLITICAS.HTML =========================
-
 if(document.body.id == "politicas"){
 
-const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"))
-const backButton = document.getElementById("back-button")
+    const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"))
+    const backButton = document.getElementById("back-button")
 
-backButton.addEventListener("click", () => {
-    window.location.href = "/home"
-})
+    if (backButton) {
+        backButton.addEventListener("click", () => {
+            window.location.href = "/home"
+        })
+    }
+   
+    carregarDetalhesPolitica()
 
-const idDetalhe = detalhePoliticaId
+    async function carregarDetalhesPolitica() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const politicaId = urlParams.get("id");
 
-/* logica da pagina dinamica */
+    if (!politicaId) {
+        window.location.href = "/home";
+        return;
+    }
 
+    try {
+        const resposta = await fetch("/cidadao/listar");
+        if (!resposta.ok) throw new Error("Erro ao buscar a lista de políticas.");
+        
+        const dados = await resposta.json(); 
+        const politica = dados.find((item) => item.id == politicaId);
+ 
+        if (politica) {
+            document.querySelector(".policy-title").textContent = politica.titulo;
+            document.querySelector(".main-content .content-card:nth-child(1) p").textContent = politica.descricao;
+            document.querySelector(".sidebar .info-item:nth-child(2) p").textContent = politica.publico_alvo;
+            document.querySelector(".sidebar .info-item:nth-child(3) p").textContent = politica.local_atuacao;
 
+            
+        } else {
+            console.error("Política não encontrada dentro do array.");
+            alert("Política pública não encontrada.");
+            window.location.href = "/home";
+        }
+
+    } catch (error) {
+        console.error("Erro ao renderizar dados da política:", error);
+    }
+}
 }
