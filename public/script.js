@@ -212,9 +212,9 @@ if (document.body.id == "cidadao") {
   const navbar = document.querySelector("nav.header-nav");
   const btnArea = document.getElementById("btn-area");
   const btnNomePerfil = document.getElementById("btn-nome-perfil");
+  const btnHome = document.getElementById("btn-home")
 
-  const areaText =
-    usuarioLogado.perfil == "admin" ? "Painel Admin" : "Minha Area";
+  const areaText = usuarioLogado.perfil == "admin" ? "Painel Admin" : "Minha Area";
   const nomeText = usuarioLogado ? usuarioLogado.nome : "User";
   const welcomeName = (document.getElementById("welcome-name").textContent =
     "Olá, " + usuarioLogado.nome);
@@ -229,6 +229,10 @@ if (document.body.id == "cidadao") {
       window.location.href = "/cidadao";
     }
   });
+
+  btnHome.addEventListener("click", () => {
+    window.location.href = "/home"
+  })
 
 carregarSolicitacoes()
 
@@ -393,6 +397,7 @@ if (document.body.id == "admin") {
                     <td class="actions-cell">
 
                         <button
+                        id="edit-button"
                         class="edit-button"
                         onclick=abrirEdicao(${politica.id})
                         >
@@ -501,88 +506,6 @@ if (document.body.id == "admin") {
 
 })
 
-const btnVaiCadastrar = document.getElementById("btnVaiCadastrar")
-const btnEnviarForm = document.getElementById("btnEnviarForm")
-const btnCancelarCadastro = document.getElementById("btnCancelarCadastro")
-const adminForm = document.getElementById("admin-form")
-
-const titulo = document.getElementById("form-titulo")
-const descricao = document.getElementById("form-descricao")
-const publico = document.getElementById("form-publico")
-const local = document.getElementById("form-local")
-let idEdicao = null
-
-adminForm.style.display = "none"
-
-btnCancelarCadastro.addEventListener("click", () => {
-    adminForm.style.display = "none"
-})
-
-
-btnVaiCadastrar.addEventListener("click", async function cadastrarPolitica(){
-
-    adminForm.style.display = "flex"
-    btnEnviarForm.textContent = "Cadastrar"
-    idEdicao = null
-})
-
-function abrirEdicao(id){
-
-    adminForm.style.display = "flex"
-    btnEnviarForm.textContent = "Editar"
-
-    titulo.value = politica.titulo
-    descricao.value = politica.descricao
-    publico.value = politica.publico_alvo
-    local.value = politica.local_atuacao
-
-    idEdicao = id
-}
-
-btnEnviarForm.addEventListener("click", async (event) => {
-        event.preventDefault()
-
-        const dadosFormulario = {
-            titulo: titulo.value,
-            descricao: descricao.value,
-            publico_alvo: publico.value,
-            local_atuacao: local.value
-        };
-
-        // Define dinamicamente qual será a URL e o Método com base na nossa variável de controle
-        let url = "/admin/criar";
-        let metodo = "POST";
-
-        // Se houver um ID guardado na variável global, muda o comportamento para Edição
-        if (idEdicao !== null) {
-            url = `/admin/editar/${idEdicao}`;
-            metodo = "PUT";
-        }
-
-        try {
-            const resposta = await fetch(url, {
-                method: metodo,
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(dadosFormulario)
-            });
-
-            if (resposta.ok) {
-                const acao = idEdicao ? "editada" : "cadastrada";
-                alert(`Política ${acao} com sucesso!`);
-                
-                adminForm.style.display = "none"; 
-                adminForm.reset(); 
-                idEdicao = null; // Reseta a variável de controle
-                
-                carregarPoliticas()
-            } else {
-                console.error("O servidor respondeu com erro:", resposta.status);
-            }
-        } catch (error) {
-            console.error("Erro na requisição:", error);
-        }
-        
-    })
 
 async function deletarPolitica(id) {
     const confirmar = confirm("Tem certeza que deseja excluir esta política pública?")
@@ -613,33 +536,7 @@ async function deletarPolitica(id) {
     }
   };
 
-  async function deletarPolitica(id) {
-    const confirmar = confirm(
-      "Tem certeza que deseja excluir esta política pública?",
-    );
-
-    if (!confirmar) {
-      return;
-    }
-
-    try {
-      const resposta = await fetch(`/admin/deletar/${id}`, {
-        method: "DELETE",
-      });
-
-      const dados = await resposta.json();
-
-      if (resposta.ok) {
-        alert(dados.mensagem || "Política excluída com sucesso");
-        carregarPoliticas();
-      } else {
-        alert(dados.erro || "Erro ao excluir política pública");
-      }
-    } catch (error) {
-      console.error("Erro ao excluir política:", error);
-      alert("Erro ao tentar excluir política pública");
-    }
-  }
+  
 }
 
 
