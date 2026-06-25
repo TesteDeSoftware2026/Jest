@@ -461,7 +461,6 @@ btnEnviarForm.addEventListener("click", async (event) => {
             });
 
             if (resposta.ok) {
-                // Exibe mensagem dinâmica baseada na ação realizada
                 const acao = idEdicao ? "editada" : "cadastrada";
                 alert(`Política ${acao} com sucesso!`);
                 
@@ -469,7 +468,7 @@ btnEnviarForm.addEventListener("click", async (event) => {
                 adminForm.reset(); 
                 idEdicao = null; // Reseta a variável de controle
                 
-                // Dica: Chame sua função carregarPoliticas() aqui para atualizar a tabela na tela!
+                carregarPoliticas()
             } else {
                 console.error("O servidor respondeu com erro:", resposta.status);
             }
@@ -478,6 +477,32 @@ btnEnviarForm.addEventListener("click", async (event) => {
         }
         
     })
+
+async function deletarPolitica(id) {
+    const confirmar = confirm("Tem certeza que deseja excluir esta política pública?")
+
+    if (!confirmar) {return}
+
+    try {
+        const resposta = await fetch(`/admin/deletar/${id}`, {
+            method: "DELETE"
+        })
+
+        const dados = await resposta.json()
+
+        if (resposta.ok) {
+            alert(dados.mensagem || "Política excluída com sucesso")
+            carregarPoliticas()
+        }
+        else {
+            alert(dados.erro || "Erro ao excluir política pública")
+        }
+    }
+    catch (error) {
+        console.error("Erro ao excluir política:", error)
+        alert("Erro ao tentar excluir política pública")
+    }
+}
 
 }
 
