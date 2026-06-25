@@ -402,46 +402,20 @@ const titulo = document.getElementById("form-titulo")
 const descricao = document.getElementById("form-descricao")
 const publico = document.getElementById("form-publico")
 const local = document.getElementById("form-local")
+let idEdicao = null
 
 adminForm.style.display = "none"
+
+btnCancelarCadastro.addEventListener("click", () => {
+    adminForm.style.display = "none"
+})
+
 
 btnVaiCadastrar.addEventListener("click", async function cadastrarPolitica(){
 
     adminForm.style.display = "flex"
     btnEnviarForm.textContent = "Cadastrar"
-})
-
-btnEnviarForm.addEventListener("click", async (event) => {
-        event.preventDefault()
-
-        try{
-            const resposta = await fetch("/admin/criar", {
-                method: "POST",
-                headers: {"Content-Type": "application/json"},
-                body: JSON.stringify({
-                    titulo: titulo.value,
-                    descricao: descricao.value,
-                    publico_alvo: publico.value,
-                    local_atuacao: local.value
-                })
-            })
-
-            if (resposta.ok) {
-                alert("Política cadastrada com sucesso!");
-                adminForm.style.display = "none"; // Esconde o form de novo
-                adminForm.reset(); // Limpa os campos do formulário
-            } else {
-                console.error("O servidor respondeu com erro:", resposta.status);
-            }
-        }catch(error){
-            console.error("Erro na requisição:", error);
-        }
-
-        
-    })
-
-btnCancelarCadastro.addEventListener("click", () => {
-    adminForm.style.display = "none"
+    idEdicao = null
 })
 
 function abrirEdicao(id){
@@ -456,20 +430,54 @@ function abrirEdicao(id){
     publico.value = politica.publico_alvo
     local.value = politica.local_atuacao
 
-    btnEnviarForm.addEventListener("click", async (event) => {
+    idEdicao = id
+}
+
+btnEnviarForm.addEventListener("click", async (event) => {
         event.preventDefault()
 
-        const resposta = await fetch(`/admin/editar/${id}`, {
-            method: "PUT",
-            body: JSON.stringify({
-                titulo: titulo.value,
-                descricao: descricao.value,
-                publico_alvo: publico.value,
-                local_atuacao: local.value
-            })
-        })
+        const dadosFormulario = {
+            titulo: titulo.value,
+            descricao: descricao.value,
+            publico_alvo: publico.value,
+            local_atuacao: local.value
+        };
+
+        // Define dinamicamente qual será a URL e o Método com base na nossa variável de controle
+        let url = "/admin/criar";
+        let metodo = "POST";
+
+        // Se houver um ID guardado na variável global, muda o comportamento para Edição
+        if (idEdicao !== null) {
+            url = `/admin/editar/${idEdicao}`;
+            metodo = "PUT";
+        }
+
+        try {
+            const resposta = await fetch(url, {
+                method: metodo,
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(dadosFormulario)
+            });
+
+            if (resposta.ok) {
+                // Exibe mensagem dinâmica baseada na ação realizada
+                const acao = idEdicao ? "editada" : "cadastrada";
+                alert(`Política ${acao} com sucesso!`);
+                
+                adminForm.style.display = "none"; 
+                adminForm.reset(); 
+                idEdicao = null; // Reseta a variável de controle
+                
+                // Dica: Chame sua função carregarPoliticas() aqui para atualizar a tabela na tela!
+            } else {
+                console.error("O servidor respondeu com erro:", resposta.status);
+            }
+        } catch (error) {
+            console.error("Erro na requisição:", error);
+        }
+        
     })
-}
 
 }
 
