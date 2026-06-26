@@ -1,7 +1,7 @@
--- Active: 1782416337511@@127.0.0.1@3306@jest_db
+-- Active: 1781899678783@@127.0.0.1@3306@jest_db
 CREATE DATABASE IF NOT EXISTS jest_db;
 
-use efeo;
+use jest_db;
 
 -- drop na tabela associativa primeiro
 DROP TABLE solicitacao;
@@ -68,3 +68,7 @@ values (
 );
 
 SELECT * from politica;
+
+
+ALTER TABLE solicitacao
+ADD constraint uk_usuario_politica UNIQUE (id_usuario, id_politica)
