@@ -1,7 +1,7 @@
 function formatarData(data) {
     if (!data) return "-";  
     return new Date(data).toLocaleDateString("pt-BR");
-}  
+}
 
 //========================== LOGIN.HTML ===============================
 if (document.body.id == "login-cadastro") {
@@ -33,9 +33,14 @@ if (document.body.id == "login-cadastro") {
     const nome = document.getElementById("cadastro-nome").value;
     const email = document.getElementById("cadastro-email").value;
     const senha = document.getElementById("cadastro-senha").value;
-    const perfil = document.querySelector(
-      'input[name="cadastro-perfil"]:checked',
-    ).value;
+    const perfilSelecionado = document.querySelector('input[name="cadastro-perfil"]:checked');
+
+    if(!perfilSelecionado){
+      alert("Selecione um perfil")
+      return
+    }
+
+    const perfil = perfilSelecionado.value
 
     const resposta = await fetch("/auth/cadastro", {
       method: "POST",
@@ -76,7 +81,7 @@ if (document.body.id == "login-cadastro") {
 
       window.location.href = "/home";
     } else {
-      window.location.href = "/login";
+      window.location.href = "/";
     }
   });
 }
@@ -104,13 +109,15 @@ if (document.body.id == "home") {
   });
 
   const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
+  if (!usuarioLogado) {
+    window.location.href = "/";
+  }
 
   const navbar = document.querySelector("nav.header-nav");
   const btnArea = document.getElementById("btn-area");
   const btnNomePerfil = document.getElementById("btn-nome-perfil");
 
-  const areaText =
-    usuarioLogado.perfil == "admin" ? "Painel Admin" : "Minha Area";
+  const areaText = usuarioLogado.perfil == "admin" ? "Painel Admin" : "Minha Area";
   const nomeText = usuarioLogado ? usuarioLogado.nome : "User";
 
   btnArea.textContent = areaText;
@@ -177,7 +184,7 @@ async function carregarPoliticas() {
     }
   }
 
-  function detalhePolitica(idPolitica) {
+  window.detalhePolitica = function(idPolitica) {
     window.location.href = `/politicas?id=${idPolitica}`;
   }
 }
@@ -208,6 +215,9 @@ if (document.body.id == "cidadao") {
   });
 
   const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
+  if (!usuarioLogado) {
+    window.location.href = "/";
+  }
 
   const navbar = document.querySelector("nav.header-nav");
   const btnArea = document.getElementById("btn-area");
@@ -216,8 +226,7 @@ if (document.body.id == "cidadao") {
 
   const areaText = usuarioLogado.perfil == "admin" ? "Painel Admin" : "Minha Area";
   const nomeText = usuarioLogado ? usuarioLogado.nome : "User";
-  const welcomeName = (document.getElementById("welcome-name").textContent =
-    "Olá, " + usuarioLogado.nome);
+  const welcomeName = (document.getElementById("welcome-name").textContent = "Olá, " + usuarioLogado.nome);
 
   btnArea.textContent = areaText;
   btnNomePerfil.textContent = nomeText;
@@ -234,23 +243,40 @@ if (document.body.id == "cidadao") {
     window.location.href = "/home"
   })
 
-carregarSolicitacoes()
+  carregarSolicitacoes();
+
+function atualizarContadores(solicitacoes) {
+    const totalSolicitacoes = solicitacoes.length;
+
+    const totalAprovadas = solicitacoes.filter(solicitacao =>
+        solicitacao.status_atual?.toLowerCase() === "aprovado"
+    ).length;
+
+    const totalAnalise = solicitacoes.filter(solicitacao =>
+        solicitacao.status_atual?.toLowerCase() === "em análise" ||
+        solicitacao.status_atual?.toLowerCase() === "em analise"
+    ).length;
+
+    document.getElementById("total-solicitacoes").textContent = totalSolicitacoes;
+    document.getElementById("total-aprovadas").textContent = totalAprovadas;
+    document.getElementById("total-analise").textContent = totalAnalise;
+}
 
 async function carregarSolicitacoes() {
-    try{
-
+    try {
         const resposta = await fetch(`/cidadao/${usuarioLogado.id}/solicitacoes`, {
             method: "GET"
-        })
+        });
 
-        const dados = await resposta.json()
+        const dados = await resposta.json();
 
-        const sectionSolicitaces = document.getElementById("solicitacoes-section")
+        atualizarContadores(dados);
 
-        sectionSolicitaces.innerHTML = ``
+        const sectionSolicitaces = document.getElementById("solicitacoes-section");
+
+        sectionSolicitaces.innerHTML = "";
 
         dados.forEach(solicitacao => {
-
             const linhaTabela = `
                 <div class="request-item">
 
@@ -287,15 +313,15 @@ async function carregarSolicitacoes() {
                     </a>
 
                 </div>
-            `
+            `;
 
-            sectionSolicitaces.innerHTML += linhaTabela
-        })
+            sectionSolicitaces.innerHTML += linhaTabela;
+        });
 
-    }catch(error){
-        console.error("Erro ao carregar politicas", error)
+    } catch(error) {
+        console.error("Erro ao carregar solicitações", error);
     }
-  }
+}
 }
 
 
@@ -323,13 +349,15 @@ if (document.body.id == "admin") {
   });
 
   const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
+  if (!usuarioLogado) {
+    window.location.href = "/";
+  }
 
   const navbar = document.querySelector("nav.header-nav");
   const btnArea = document.getElementById("btn-area");
   const btnNomePerfil = document.getElementById("btn-nome-perfil");
 
-  const areaText =
-    usuarioLogado.perfil == "admin" ? "Painel Admin" : "Minha Area";
+  const areaText = usuarioLogado.perfil == "admin" ? "Painel Admin" : "Minha Area";
   const nomeText = usuarioLogado ? usuarioLogado.nome : "User";
 
   btnArea.textContent = areaText;
@@ -446,19 +474,19 @@ async function carregarPoliticas() {
         idEdicao = null;
     });
 
-    function abrirEdicao(id) {
-        adminForm.style.display = "flex";
-        btnEnviarForm.textContent = "Editar";
+  window.abrirEdicao = function (id) {
+      adminForm.style.display = "flex";
+      btnEnviarForm.textContent = "Editar";
 
-        const politica = politicasCache.find((item) => item.id == id);
+      const politica = politicasCache.find((item) => item.id == id);
 
-        titulo.value = politica.titulo;
-        descricao.value = politica.descricao;
-        publico.value = politica.publico_alvo;
-        local.value = politica.local_atuacao;
+      titulo.value = politica.titulo;
+      descricao.value = politica.descricao;
+      publico.value = politica.publico_alvo;
+      local.value = politica.local_atuacao;
 
-        idEdicao = id;
-    }
+      idEdicao = id;
+  }
 
   btnEnviarForm.addEventListener("click", async (event) => {
     event.preventDefault();
@@ -555,6 +583,10 @@ btnLogout.addEventListener("click", () => {
 })
 
 const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"))
+
+if (!usuarioLogado) {
+  window.location.href = "/";
+}
 
 const navbar = document.querySelector("nav.header-nav")
 const btnArea = document.getElementById("btn-area")
