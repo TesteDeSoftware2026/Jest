@@ -40,7 +40,7 @@ describe("POST /admin/criar", () => {
 
 // ─── GET /admin/listar ────────────────────────────────────
 describe("GET /admin/listar", () => {
-  test("deve retornar 200 com lista de políticas", async () => {
+  test("CT-41 | deve retornar 200 com lista de políticas", async () => {
     db.query.mockResolvedValue([[{ id: 1, titulo: "Política A" }]]);
 
     const res = await request(app).get("/admin/listar");
@@ -59,8 +59,9 @@ describe("GET /admin/listar", () => {
 });
 
 // ─── DELETE /admin/deletar/:id ───────────────────────────
-describe("DELETE /admin/deletar/:id", () => {
-  test("deve retornar 409 se houver solicitações vinculadas", async () => {
+describe("DELETE /admin/deletar/:id - Exclusão de política", () => {
+
+  test("CT-42 | deve retornar 409 se houver solicitações vinculadas", async () => {
     db.query
       .mockResolvedValueOnce([[{ id: 1 }]])  // política existe
       .mockResolvedValueOnce([[{ id: 5 }]]); // solicitação vinculada
@@ -68,9 +69,29 @@ describe("DELETE /admin/deletar/:id", () => {
     const res = await request(app).delete("/admin/deletar/1");
 
     expect(res.status).toBe(409);
+    expect(res.body).toHaveProperty("erro", "Não é possível excluir esta política, pois existem solicitações vinculadas a ela");
   });
 
-  
+  test("CT-43 | deve retornar 200 ao deletar política sem solicitações vinculadas", async () => {
+    db.query
+      .mockResolvedValueOnce([[{ id: 1 }]]) // política existe
+      .mockResolvedValueOnce([[]])           // sem solicitações vinculadas
+      .mockResolvedValueOnce([{}]);          // DELETE executado
+
+    const res = await request(app).delete("/admin/deletar/1");
+
+    expect(res.status).toBe(200);
+    expect(res.body).toHaveProperty("mensagem", "Política excluída com sucesso");
+  });
+
+  test("CT-44 | deve retornar 404 ao tentar deletar política inexistente", async () => {
+    db.query.mockResolvedValueOnce([[]]); // política não encontrada
+
+    const res = await request(app).delete("/admin/deletar/999");
+
+    expect(res.status).toBe(404);
+    expect(res.body).toHaveProperty("erro", "Política pública não encontrada com o ID fornecido");
+  });
 });
 
 describe("CT-35 | PUT /admin/editar/:id - Admin edita política existente", () => {
