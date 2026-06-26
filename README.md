@@ -37,6 +37,10 @@ npm install
 npm run dev
 ```
 
+## ANTES DE EXECUTAR
+
+Leia as intruções no arquivo `src/database/database.js`
+
 ## Roda todos os testes
 ```bash
 # cmd
